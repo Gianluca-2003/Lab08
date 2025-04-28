@@ -7,6 +7,7 @@ class DAO():
     def __init__(self):
         pass
 
+
     @staticmethod
     def getAllNerc():
         conn = DBConnect.get_connection()
@@ -14,12 +15,15 @@ class DAO():
         result = []
 
         cursor = conn.cursor(dictionary=True)
-        query = """ ADD YOUR QUERY """
+
+        query = """SELECT *
+                   FROM Nerc n """
 
         cursor.execute(query)
 
         for row in cursor:
             result.append(Nerc(row["id"], row["value"]))
+
 
         cursor.close()
         conn.close()
@@ -31,8 +35,13 @@ class DAO():
 
         result = []
 
+
         cursor = conn.cursor(dictionary=True)
-        query = """ ADD YOUR QUERY """
+
+        query = """SELECT *
+                    FROM PowerOutages po 
+                    WHERE po.nerc_id = %s
+                    ORDER BY po.date_event_began"""
 
         cursor.execute(query, (nerc.id,))
 
@@ -44,6 +53,11 @@ class DAO():
                       row["customers_affected"], row["date_event_began"],
                       row["date_event_finished"], row["demand_loss"]))
 
+
         cursor.close()
         conn.close()
         return result
+
+
+
+
