@@ -54,6 +54,9 @@ class Model:
             n_persone += event.customers_affected
         return n_persone
 
+    def upperBound(self,parziale,restanti):
+        return self.calcolaPersoneCoivolte(parziale) + self.calcolaPersoneCoivolte(restanti)
+
 
 
     def ricorsione(self, parziale, maxY, maxH,pos):
@@ -71,8 +74,10 @@ class Model:
 
             #for event in self._listEvents:
         for i in range(pos, len(self._listEvents)):
-                #vado a mettere un controllo su gli anni
+            #vado a mettere un controllo su gli anni
             event = self._listEvents[i]
+            if self.calcolaPersoneCoivolte(self._solBest) > self.upperBound(parziale,self._listEvents[pos:]):
+                return
             if self.isValidConAnni(parziale, maxY, event):
                 parziale.append(event)
                 self.ricorsione(parziale, maxY, maxH,i+1)
